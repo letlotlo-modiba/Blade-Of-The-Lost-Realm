@@ -25,15 +25,16 @@ You play as a chosen warrior tasked with restoring balance — or reshaping the 
 * 🛠️ Configurable game settings (modular design)
 
 🏗️ Project Structure
-
+```
 blade-of-the-lost-realm/
 │
-├── config/             # Game configuration files
-├── src/                # Core game logic
-├── assets/             # Images, audio, and game assets
-├── docs/               # Documentation and lore
-├── tests/              # Unit and integration tests
+├── config/      # Game configuration files
+├── src/         # Core game logic
+├── assets/      # Images, audio, and game assets
+├── docs/        # Documentation and lore
+├── tests/       # Unit and integration tests
 └── README.md
+```
 
 ⚙️ Configuration
 
