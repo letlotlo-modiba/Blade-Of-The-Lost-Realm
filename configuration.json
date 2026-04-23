@@ -1,0 +1,106 @@
+{
+    "game": {
+        "title": "Blade Of The Lost Realm",
+        "version": "0.1.0",
+        "debug": true,
+        "language": "en"
+    },
+
+    "display": {
+        "resolution": {
+            "height": 1080,
+            "width":1920
+        },
+        "fullscreen": false,
+        "fps_limit": 60,
+        "vsync": true
+    },
+
+    "audio": {
+        "master_volume": 0.8,
+        "music_volume": 0.6,
+        "effects_volume": 0.7,
+        "mute": false
+
+    },
+
+    "gameplay": {
+        "starting_health": 100,
+        "starting_mana": 50,
+        "max_level": 50,
+        "difficulty": "normal",
+        "autosave": true
+    },
+
+    "combat": {
+        "base_damage": 10,
+        "crit_chance": 0.1,
+        "crit_multiplier": 1.5,
+        "dodge_chance": 0.05,
+        "cooldowns": {
+            "light_attack": 0.5,
+            "heavy_attack": 1.5,
+            "ability": 5
+        }
+    },
+
+    "realms": {
+        "mortal": {
+            "enemy_spawn_rate": 1.0,
+            "resource_abundance": 1.0
+        },
+
+        "shadow": {
+            "enemy_spawn_rate": 1.5,
+            "dark_energy": true
+            },
+
+        "astral": {
+            "mana_regen_multiplier": 1.8
+        },
+
+        "beast": {
+            "enemy_aggression": 1.7
+        }
+    },
+
+    "player": {
+        "classes":{
+            "warrior": {
+                "health": 120,
+                "mana": 30,
+                "strength": 15
+            },
+
+            "mage": {
+                "health": 70,
+                "mana": 120,
+                "intelligence": 18
+            }
+        }
+    },
+
+    "ai": {
+        "enemy_aggression": 0.7,
+        "reaction_time": 0.3,
+        "pathfinding": "A*"
+    },
+
+
+    "controls": {
+        "move_up": "W",
+        "move_down": "S",
+        "move_left": "A",
+        "move_right": "D",
+        "attack": "LEFT_CLICK",
+        "ability": "SPACE"
+    },
+
+    "save": {
+        "autosave_interval": 300,
+        "max_save_slots": 3
+    }
+}
+    
+
+
