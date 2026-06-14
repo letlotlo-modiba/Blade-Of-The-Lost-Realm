@@ -72,7 +72,8 @@
                 "stats": {
                     "health": 120,
                     "mana": 30,
-                    "strength": 15
+                    "strength": 15,
+                    "intelligence": 20
                 }
             },
 
