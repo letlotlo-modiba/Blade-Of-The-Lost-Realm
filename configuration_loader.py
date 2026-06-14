@@ -10,57 +10,68 @@ class Config:
         self.enemy = self.EnemyConfig(data["enemy"])
         self.ai = self.AIConfig(data["ai"])
 
-    class PlayerConfig:
-        def __init__(self, data):
+    class BaseConfig:
+        def __init__(self, data, section_name):
             self.data = data
-
-        def  get_player_stats(self, class_name):
-            try:
-                return self.data["classes"][class_name]["stats"]
-            except KeyError:
-                raise ValueError(f"Class {class_name} does not exist in configuration")
-
-    class DisplayConfig:
-        def __init__(self, data):
-            self.data = data
-
-        def get_resolution(self):
-            return self.data["resolution"]
-          
-    class GameConfig:
-        def __init__(self, data):
-            self.data = data
-             
-        def get_title(self):
-            return self.data["title"]
-
-        def get_version(self):
-            return self.data["version"]
-        
-    class EnemyConfig:
-        def __init__(self, data):
-            self.data = data
-              
-        def get_base_stats(self):
-            return {
-                "health": self.data["base_health"],
-                "damage": self.data["base_damage"]
-            }
-          
-    class AIConfig:
-        def __init__(self, data):
-            self.data = data
+            self.section_name = section_name
 
         def _get(self, key):
             if key not in self.data:
-                raise ValueError(f"Key {key} does not exist in AI configuration")
+                raise ValueError(f"Missing '{key}' in {self.section_name} configuration")
             return self.data[key]
         
-        def validate(self):
-            required_keys = ["aggression", "reaction_time", "pathfinding"]
+        def _validate_required(self, required_keys):
             for key in required_keys:
                 if key not in self.data:
-                    raise ValueError(f"Missing required AI configuration key: {key}")
+                    raise ValueError(f"Missing '{key}' in {self.section_name} configuration")
+
+
+    class PlayerConfig(BaseConfig):
+        def __init__(self, data):
+            super().__init__(data, "Player")
+            self._validate_required(["classes"])
+
+        def  get_player_stats(self, class_name):
+            classes = self._get("classes")
+
+            if "stats" not in classes[class_name]:
+                raise ValueError(f"Missing 'stats' for class '{class_name}'")
+
+            return classes[class_name]["stats"]
+
+    class DisplayConfig(BaseConfig):
+        def __init__(self, data):
+            super().__init__(data, "Display")
+
+        def get_resolution(self):
+            return self._get("resolution")
+          
+    class GameConfig(BaseConfig):
+        def __init__(self, data):
+            super().__init__(data, "Game")
+            self._validate_required(["title", "version"])
+
+        def get_title(self):
+            return self._get("title")
+
+        def get_version(self):
+            return self._get("version")
+        
+    class EnemyConfig(BaseConfig):
+        def __init__(self, data):
+            super().__init__(data, "Enemy")
+            self._validate_required(["base_health", "base_damage"])
+
+        def get_base_stats(self):
+            return {
+                "health": self._get("base_health"),
+                "damage": self._get("base_damage")
+            }
+          
+    class AIConfig(BaseConfig):
+        def __init__(self, data):
+            super().__init__(data, "AI")
+            self._validate_required(["aggression", "reaction_time", "pathfinding"])
         
         def get_aggression(self):
             return self._get("aggression")
