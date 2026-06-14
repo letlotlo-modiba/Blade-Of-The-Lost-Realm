@@ -31,7 +31,7 @@ class Config:
         def __init__(self, data):
             self.data = data
              
-        def get_game_title_and_version(self):
+        def get_title(self):
             return self.data["title"]
 
         def get_version(self):
@@ -50,15 +50,26 @@ class Config:
     class AIConfig:
         def __init__(self, data):
             self.data = data
+
+        def _get(self, key):
+            if key not in self.data:
+                raise ValueError(f"Key {key} does not exist in AI configuration")
+            return self.data[key]
+        
+        def validate(self):
+            required_keys = ["aggression", "reaction_time", "pathfinding"]
+            for key in required_keys:
+                if key not in self.data:
+                    raise ValueError(f"Missing required AI configuration key: {key}")
         
         def get_aggression(self):
-            return self.data["aggression"]
+            return self._get("aggression")
         
         def get_reaction_time(self):
-            return self.data["reaction_time"]
+            return self._get("reaction_time")
         
         def get_pathfinding(self):
-            return self.data["pathfinding"]
+            return self._get("pathfinding")
 
 
 with open("configuration.json") as f:
@@ -71,5 +82,6 @@ configuration = Config(data)
 # print(configuration.display.get_resolution())
 # print(configuration.player.get_player_stats("warrior"))
 # print(configuration.player.get_player_stats("mage"))
-print(configuration.ai.get_aggression())
-
+# print(configuration.ai.get_aggression())
+# print(configuration.ai.get_reaction_time())
+# print(configuration.ai.get_pathfinding())
