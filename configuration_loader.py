@@ -24,6 +24,13 @@ class Config:
             for key in required_keys:
                 if key not in self.data:
                     raise ValueError(f"Missing '{key}' in {self.section_name} configuration")
+                
+        def _validate_type(self, key, expected_type):
+            value = self._get(key)
+            if not isinstance(value, expected_type):
+                raise ValueError(f"Invalid type for '{key}' in {self.section_name}."
+                                 f"Expected {expected_type.__name__}, got {type(value).__name__}")
+            
 
 
     class PlayerConfig(BaseConfig):
@@ -34,6 +41,9 @@ class Config:
         def  get_player_stats(self, class_name):
             classes = self._get("classes")
 
+            if class_name not in classes:
+                raise ValueError(f"Class '{class_name}' not found in Player configuration")
+            
             if "stats" not in classes[class_name]:
                 raise ValueError(f"Missing 'stats' for class '{class_name}'")
 
@@ -42,9 +52,7 @@ class Config:
     class DisplayConfig(BaseConfig):
         def __init__(self, data):
             super().__init__(data, "Display")
-
-        def get_resolution(self):
-            return self._get("resolution")
+            self._validate_required(["resolution"])
           
     class GameConfig(BaseConfig):
         def __init__(self, data):
@@ -73,15 +81,18 @@ class Config:
             super().__init__(data, "AI")
             self._validate_required(["aggression", "reaction_time", "pathfinding"])
         
+            self._validate_type("aggression", float)
+            self._validate_type("reaction_time", float)
+            self._validate_type("pathfinding", str)
+
         def get_aggression(self):
             return self._get("aggression")
-        
+
         def get_reaction_time(self):
             return self._get("reaction_time")
-        
+
         def get_pathfinding(self):
             return self._get("pathfinding")
-
 
 with open("configuration.json") as f:
             data = json.load(f)
@@ -89,10 +100,4 @@ with open("configuration.json") as f:
 configuration = Config(data)
 
 # Testing output
-# print(configuration.game.get_game_title_and_version())
-# print(configuration.display.get_resolution())
-# print(configuration.player.get_player_stats("warrior"))
-# print(configuration.player.get_player_stats("mage"))
-# print(configuration.ai.get_aggression())
-# print(configuration.ai.get_reaction_time())
-# print(configuration.ai.get_pathfinding())
+
