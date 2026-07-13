@@ -94,7 +94,7 @@ class Config:
         def get_pathfinding(self):
             return self._get("pathfinding")
 
-with open("configuration.json") as f:
+with open("config/configuration.json") as f:
             data = json.load(f)
         
 configuration = Config(data)
