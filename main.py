@@ -30,7 +30,17 @@ combat.resolve_attack(enemy, player)
 while player.is_alive() and enemy.is_alive():
     # Player turn
     print("\n--- Player Turn ---")
-    combat.resolve_attack(player, enemy)
+    action = input("Choose action (attack/heal):)".lower()) # player input
+
+    if action == "attack":
+        combat.resolve_attack(player, enemy)
+    
+    elif action == "heal":
+        player.heal(10)
+        print(f"Player heals! Health: {player.health} ")
+    
+    else:
+        print("Invalid action! Turn skipped.")
 
     if not enemy.is_alive():
         print("Enemy defeated!")
@@ -48,6 +58,9 @@ while player.is_alive() and enemy.is_alive():
         print("Enemy retreats")
         break
 
+    elif action == "wait":
+        print("Enemy hesitates...")
+        break
     else:
         print("Enemy waits...")
 
