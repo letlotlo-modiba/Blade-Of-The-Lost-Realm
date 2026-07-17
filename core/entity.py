@@ -10,9 +10,9 @@ class Entity:
             raise ValueError("Damage cannot be negative")
         
         self.health -= amount
+        self.health = max(0, min(self.health, self.max_health))
 
-        if self.health <= 0:
-            self.health = 0
+        if self.health == 0:
             self.alive = False
 
     def is_alive(self):

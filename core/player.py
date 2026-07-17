@@ -22,17 +22,3 @@ class Player(Entity):
     def attack(self):
         return self.strength
     
-    
-
-# ---TESTING OUTPUT ---
-# player = Player({"health": 100, "mana": 50, "strength": 10})
-
-# print(player.health)
-# player.take_damage(30)
-# print(player.health)
-
-# player.heal(20)
-# print(player.health)
-
-# player.take_damage(200)
-# print(player.is_alive())

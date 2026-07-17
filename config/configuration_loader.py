@@ -9,6 +9,7 @@ class Config:
         self.game = self.GameConfig(data["game"])
         self.enemy = self.EnemyConfig(data["enemy"])
         self.ai = self.AIConfig(data["ai"])
+        self.combat = self.CombatConfig(data["combat"])
 
     class BaseConfig:
         def __init__(self, data, section_name):
@@ -93,6 +94,14 @@ class Config:
 
         def get_pathfinding(self):
             return self._get("pathfinding")
+        
+    class CombatConfig(BaseConfig):
+        def __init__(self, data):
+            super().__init__(data, "Combat")
+            self._validate_required(["crit_chance", "crit_multiplier", "dodge_chance"])
+
+        def get_all(self):
+            return self.data
 
 with open("config/configuration.json") as f:
             data = json.load(f)

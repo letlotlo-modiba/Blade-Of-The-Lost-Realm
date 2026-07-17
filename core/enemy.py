@@ -12,8 +12,9 @@ class Enemy(Entity):
         return self.damage
 
     def decide_action(self):
-        if self.health < self.max_health *0.3:
+        if self.health < self.max_health * 0.3:
             return "retreat"
+        
         elif self.aggression > 0.5:
             return "attack"
         else:
