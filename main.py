@@ -18,12 +18,39 @@ player = Player(player_stats)
 enemy = Enemy(enemy_stats, configuration.ai)
 
 # Combat
-combat = CombatSystem()
+combat = CombatSystem(configuration.combat.get_all())
 
 combat.resolve_attack(player, enemy)
 combat.resolve_attack(enemy, player)
 
-combat = CombatSystem()
-
 combat.resolve_attack(player, enemy)
 combat.resolve_attack(enemy, player)
+
+# Main game loop
+while player.is_alive() and enemy.is_alive():
+    # Player turn
+    print("\n--- Player Turn ---")
+    combat.resolve_attack(player, enemy)
+
+    if not enemy.is_alive():
+        print("Enemy defeated!")
+        break
+
+    # Enemy turn
+    print("\n--- Enemy Turn ---")
+    action = enemy.decide_action()
+
+    print(f"Enemy chooses to {action}")
+    if action == "attack":
+        combat.resolve_attack(enemy, player)
+
+    elif action == "retreat":
+        print("Enemy retreats")
+        break
+
+    else:
+        print("Enemy waits...")
+
+    if not player.is_alive():
+        print("Player defeated!")
+        break
