@@ -30,10 +30,11 @@ combat.resolve_attack(enemy, player)
 while player.is_alive() and enemy.is_alive():
     # Player turn
     print("\n--- Player Turn ---")
-    action = input("Choose action (attack/heal):)".lower()) # player input
+    action = input("Choose action (light/heavy/ability):)".lower()) # player input
 
     if action == "attack":
-        combat.resolve_attack(player, enemy)
+        combat.resolve_attack(player, enemy, action)
+        player.reduce_cooldowns()
     
     elif action == "heal":
         player.heal(10)
