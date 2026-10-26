@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 
 class Config:
@@ -20,31 +21,33 @@ class Config:
             if key not in self.data:
                 raise ValueError(f"Missing '{key}' in {self.section_name} configuration")
             return self.data[key]
-        
+
         def _validate_required(self, required_keys):
             for key in required_keys:
                 if key not in self.data:
                     raise ValueError(f"Missing '{key}' in {self.section_name} configuration")
-                
+
         def _validate_type(self, key, expected_type):
             value = self._get(key)
-            if not isinstance(value, expected_type):
-                raise ValueError(f"Invalid type for '{key}' in {self.section_name}."
-                                 f"Expected {expected_type.__name__}, got {type(value).__name__}")
-            
-
+            valid_types = (int, float) if expected_type is float else expected_type
+            if not isinstance(value, valid_types):
+                expected_name = "float or int" if expected_type is float else expected_type.__name__
+                raise ValueError(
+                    f"Invalid type for '{key}' in {self.section_name}. "
+                    f"Expected {expected_name}, got {type(value).__name__}"
+                )
 
     class PlayerConfig(BaseConfig):
         def __init__(self, data):
             super().__init__(data, "Player")
             self._validate_required(["classes"])
 
-        def  get_player_stats(self, class_name):
+        def get_player_stats(self, class_name):
             classes = self._get("classes")
 
             if class_name not in classes:
                 raise ValueError(f"Class '{class_name}' not found in Player configuration")
-            
+
             if "stats" not in classes[class_name]:
                 raise ValueError(f"Missing 'stats' for class '{class_name}'")
 
@@ -54,7 +57,7 @@ class Config:
         def __init__(self, data):
             super().__init__(data, "Display")
             self._validate_required(["resolution"])
-          
+
     class GameConfig(BaseConfig):
         def __init__(self, data):
             super().__init__(data, "Game")
@@ -65,7 +68,7 @@ class Config:
 
         def get_version(self):
             return self._get("version")
-        
+
     class EnemyConfig(BaseConfig):
         def __init__(self, data):
             super().__init__(data, "Enemy")
@@ -76,12 +79,12 @@ class Config:
                 "health": self._get("base_health"),
                 "damage": self._get("base_damage")
             }
-          
+
     class AIConfig(BaseConfig):
         def __init__(self, data):
             super().__init__(data, "AI")
             self._validate_required(["aggression", "reaction_time", "pathfinding"])
-        
+
             self._validate_type("aggression", float)
             self._validate_type("reaction_time", float)
             self._validate_type("pathfinding", str)
@@ -94,7 +97,7 @@ class Config:
 
         def get_pathfinding(self):
             return self._get("pathfinding")
-        
+
     class CombatConfig(BaseConfig):
         def __init__(self, data):
             super().__init__(data, "Combat")
@@ -103,10 +106,10 @@ class Config:
         def get_all(self):
             return self.data
 
-with open("config/configuration.json") as f:
-            data = json.load(f)
-        
-configuration = Config(data)
 
-# Testing output
+if __name__ == "__main__":
+    config_file = Path(__file__).parent / "configuration.json"
+    with open(config_file) as f:
+        data = json.load(f)
 
+    configuration = Config(data)

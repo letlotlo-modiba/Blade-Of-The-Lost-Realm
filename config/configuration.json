@@ -40,8 +40,8 @@
         "crit_multiplier": 1.5,
         "dodge_chance": 0.05,
         "cooldowns": {
-            "light_attack": 0.5,
-            "heavy_attack": 1.5,
+            "light": 0.5,
+            "heavy": 1.5,
             "ability": 5
         }
     },

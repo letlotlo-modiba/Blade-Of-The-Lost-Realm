@@ -77,4 +77,3 @@ Focus on backend logic before visuals
 
 ✨ Author
 - Letlotlo Modiba
-- Aspiring Software Engineer | Backend Development | Systems Design | Machine Learning

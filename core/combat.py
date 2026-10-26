@@ -4,29 +4,25 @@ class CombatSystem:
     def __init__(self, combat_config):
         self.combat_config = combat_config
 
-    def resolve_attack(self, attacker, defender, action = "attack"):
-        import random
+    def resolve_attack(self, attacker, defender, action="attack"):
+        # --- ACTION LOGIC ---
+        if action == "light" and hasattr(attacker, "light_attack"):
+            damage = attacker.light_attack()
+        elif action == "heavy" and hasattr(attacker, "heavy_attack"):
+            damage = attacker.heavy_attack()
+        elif action == "ability" and hasattr(attacker, "use_ability"):
+            damage = attacker.use_ability()
+        else:
+            damage = attacker.attack()
 
-        damage = attacker.attack()
+        if damage <= 0:
+            return
 
         # --- DODGE ---
         if random.random() < self.combat_config["dodge_chance"]:
             print(f"{defender.__class__.__name__} dodged the attack!")
             return
-        
-        # --- ACTION LOGIC ---
-        if action == "light":
-            damage = attacker.light_attack()
 
-        elif action == "heavy":
-            damage = attacker.heavy_attack()
-
-        elif action == "ability":
-            damage = attacker.use_ability()
-
-        else:
-            damage = attacker.attack()
-        
         # --- CRITICAL HIT ---
         if random.random() < self.combat_config["crit_chance"]:
             damage *= self.combat_config["crit_multiplier"]

@@ -1,17 +1,19 @@
+from pathlib import Path
+import json
 from core.player import Player
 from core.enemy import Enemy
 from core.combat import CombatSystem
 from config.configuration_loader import Config
-import json
 
 # Load configuration
-with open("config/configuration.json") as f:
+config_path = Path(__file__).parent / "config" / "configuration.json"
+with open(config_path) as f:
     data = json.load(f)
 
 configuration = Config(data)
 
 # Create Objects
-player_stats = configuration.player.get_player_stats("warrior") 
+player_stats = configuration.player.get_player_stats("warrior")
 enemy_stats = configuration.enemy.get_base_stats()
 
 player = Player(player_stats)
@@ -20,28 +22,29 @@ enemy = Enemy(enemy_stats, configuration.ai)
 # Combat
 combat = CombatSystem(configuration.combat.get_all())
 
-combat.resolve_attack(player, enemy)
-combat.resolve_attack(enemy, player)
-
-combat.resolve_attack(player, enemy)
-combat.resolve_attack(enemy, player)
-
-# Main game loop
+# --- MAIN GAME LOOP ---
 while player.is_alive() and enemy.is_alive():
+
     # Player turn
     print("\n--- Player Turn ---")
-    action = input("Choose action (light/heavy/ability):)".lower()) # player input
+    action = input("Choose action (light/heavy/ability/heal): ").strip().lower()
 
-    if action == "attack":
-        combat.resolve_attack(player, enemy, action)
-        player.reduce_cooldowns()
-    
+    if action in ["light", "heavy", "ability"]:
+        if player.is_on_cooldown(action):
+            print(f"{action} is on cooldown!")
+        elif action == "ability" and player.mana < 10:
+            print("Not enough mana!")
+        else:
+            combat.resolve_attack(player, enemy, action)
+
     elif action == "heal":
         player.heal(10)
         print(f"Player heals! Health: {player.health} ")
-    
+
     else:
         print("Invalid action! Turn skipped.")
+
+    player.reduce_cooldowns()
 
     if not enemy.is_alive():
         print("Enemy defeated!")
@@ -61,7 +64,7 @@ while player.is_alive() and enemy.is_alive():
 
     elif action == "wait":
         print("Enemy hesitates...")
-        break
+
     else:
         print("Enemy waits...")
 

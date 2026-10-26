@@ -2,13 +2,13 @@ class Entity:
     def __init__(self, health):
         self.max_health = health
         self.health = health
-        self.alive = True
+        self.alive = health > 0
 
     # --- TAKE DAMAGE ---
     def take_damage(self, amount):
         if amount < 0:
             raise ValueError("Damage cannot be negative")
-        
+
         self.health -= amount
         self.health = max(0, min(self.health, self.max_health))
 
